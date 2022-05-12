@@ -10,11 +10,11 @@ const productRoutes = require('./routes');
 app.use('/api/products', productRoutes);
 
 const mongoose = require('mongoose');
-mongoose.connect(`mongodb://admin:admin@localhost:27017/tdd?authSource=admin&authMechanism=SCRAM-SHA-1`, {ignoreUndefined : true}).then(() => {
-    console.log('몽고 ON!')
-}).catch((err)=>{
+mongoose.connect(`mongodb://admin:admin@localhost:27017/tdd?authSource=admin&authMechanism=SCRAM-SHA-1`, { ignoreUndefined: true }).then(() => {
+    console.log('몽고 ON!');
+}).catch((err) => {
     console.log(err);
-})
+});
 
 app.get('/', (req, res) => {
     res.send('Hello World');
