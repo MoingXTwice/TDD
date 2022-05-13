@@ -20,5 +20,11 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
+app.use((error, req, res, next) => {
+    res.status(500).json({ message: error.message }); // next(e) 에서 넘어온 에러처리를 담당한다. next를 사용하지 않으면 넘어오지 않는다.
+});
+
 app.listen(PORT);
 console.log(`Running on port ${PORT}`);
+
+module.exports = app;

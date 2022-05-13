@@ -36,10 +36,11 @@ describe('Product Controller Create', () => {
         expect(res._getJSONData()).toStrictEqual(newProduct);
     });
     it('should handle errors', async () => {
-        const errorMessage = { message: 'description property missing' };
-        const rejectedPromise = Promise.reject(errorMessage);
-        Product.create.mockReturnValue(rejectedPromise);
-        await productController.createProduct(req, res, next);
-        expect(next).toBeCalledWith(errorMessage);
+        const errorMessage = { message: '생성 실패' }; // 에러메세지를 선언해준다.
+        const rejectedPromise = Promise.reject(errorMessage); // 에러가 나는 상황을 가정하여 선언한다. 에러가 나면 errorMessage를 반환한다.
+        Product.create.mockReturnValue(rejectedPromise); // Product.create 할 때 rejectedPromise 에러가 발생한다.
+        await productController.createProduct(req, res, next); // createProduct 실행
+        expect(res._getJSONData()).toStrictEqual(errorMessage); // controller 에서 반환된 json과 선언한 에러메세지가 같은지 비교한다.
+        expect(res.statusCode).toEqual(400); // controller 에서 반환된 statusCode가 controller에서 선언한 statusCode와 같은지 비교한다.
     });
 });
