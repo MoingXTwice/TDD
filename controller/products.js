@@ -32,3 +32,20 @@ exports.getProductById = async (req, res, next) => {
         res.status(500).json({ message: '조회 실패' });
     }
 };
+
+exports.updateProduct = async (req, res, next) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.productId,
+            req.body,
+            { new: true },
+        );
+        if (updatedProduct) {
+            res.status(201).json(updatedProduct);
+        } else {
+            res.status(404).send();
+        }
+    } catch (e) {
+        res.status(500).json({ message: '수정 실패' });
+    }
+};

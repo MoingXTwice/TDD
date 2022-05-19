@@ -44,3 +44,19 @@ it('GET id doesnt exist /api/products/:productId', async () => {
     const response = await request(app).get('/api/products/627e26007c0297df0fb6c3d1');
     expect(response.statusCode).toEqual(404);
 });
+
+it('PUT /api/products', async () => {
+    const response = await request(app)
+        .put('/api/products/' + firstProduct._id)
+        .send({ name: 'updated name', description: 'updated description' });
+    expect(response.statusCode).toEqual(201);
+    expect(response.body.name).toEqual('updated name');
+    expect(response.body.description).toEqual('updated description');
+});
+
+it('PUT id doesnt exist /api/products/:productId', async () => {
+    const response = await request(app)
+        .put('/api/products/627e26007c0297df0fb6c3d1')
+        .send({ name: 'updated name', description: 'updated description' });
+    expect(response.statusCode).toEqual(404);
+});
