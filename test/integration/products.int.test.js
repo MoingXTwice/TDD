@@ -60,3 +60,13 @@ it('PUT id doesnt exist /api/products/:productId', async () => {
         .send({ name: 'updated name', description: 'updated description' });
     expect(response.statusCode).toEqual(404);
 });
+
+it('DELETE /api/products', async () => {
+    const response = await request(app).delete('/api/products/' + firstProduct._id).send();
+    expect(response.statusCode).toEqual(201);
+});
+
+it('DELETE id doesnt exist /api/products/:productId', async () => {
+    const response = await request(app).delete('/api/products/' + firstProduct._id).send();
+    expect(response.statusCode).toEqual(404);
+});

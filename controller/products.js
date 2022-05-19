@@ -49,3 +49,16 @@ exports.updateProduct = async (req, res, next) => {
         res.status(500).json({ message: '수정 실패' });
     }
 };
+
+exports.deleteProduct = async (req, res, next) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+        if (deletedProduct) {
+            res.status(201).json(deletedProduct);
+        } else {
+            res.status(404).send();
+        }
+    } catch (e) {
+        res.status(500).json({ message: '삭제 실패' });
+    }
+};

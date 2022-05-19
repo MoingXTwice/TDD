@@ -9,6 +9,7 @@ Product.create = jest.fn();
 Product.find = jest.fn();
 Product.findById = jest.fn();
 Product.findByIdAndUpdate = jest.fn();
+Product.findByIdAndDelete = jest.fn();
 
 const productId = '627e26007c0297df0fb6c3d1';
 const updatedProduct = { name: 'updated name', description: 'updated description' };
@@ -147,6 +148,42 @@ describe('Product Controller Update', () => {
         const rejectedPromise = Promise.reject(errorMessage);
         Product.findByIdAndUpdate.mockReturnValue(rejectedPromise);
         await productController.updateProduct(req, res, next);
+        expect(res._getJSONData()).toStrictEqual(errorMessage);
+        expect(res.statusCode).toEqual(500);
+    });
+});
+
+describe('Product Controller Delete', () => {
+    it('should have an deleteProduct function', () => {
+        expect(typeof productController.deleteProduct).toBe('function');
+    });
+    it('should call Product.findByIdAndDelete', async () => {
+        req.params.productId = productId;
+        await productController.deleteProduct(req, res, next);
+        expect(Product.findByIdAndDelete).toBeCalledWith(productId);
+    });
+    it('should return json body and response code 200', async () => {
+        let deletedProduct = {
+            name: 'deleted Product',
+            description: 'deleted Description'
+        }
+        Product.findByIdAndDelete.mockReturnValue(deletedProduct);
+        await productController.deleteProduct(req, res, next);
+        expect(res.statusCode).toEqual(201);
+        expect(res._getJSONData()).toStrictEqual(deletedProduct);
+        expect(res._isEndCalled).toBeTruthy();
+    });
+    it('should return 404 when item doesnt exist', async () => {
+        Product.findByIdAndDelete.mockReturnValue(null);
+        await productController.deleteProduct(req, res, next);
+        expect(res.statusCode).toEqual(404);
+        expect(res._isEndCalled).toBeTruthy();
+    });
+    it('should handle errors', async () => {
+        const errorMessage = { message: '삭제 실패' };
+        const rejectedPromise = Promise.reject(errorMessage);
+        Product.findByIdAndDelete.mockReturnValue(rejectedPromise);
+        await productController.deleteProduct(req, res, next);
         expect(res._getJSONData()).toStrictEqual(errorMessage);
         expect(res.statusCode).toEqual(500);
     });
